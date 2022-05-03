@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Proyecto1</title>
+</head>
+
+<body>
+
+	<h1>Carspot</h1>
+
+	<form id="form">
+		<!--Owner-->
+		<div>
+			<label for="owner">Owner</label>
+			<input type="text" name="owner" id="owner" maxlength="32" placeholder="Owner of the car" required>
+		</div>
+
+        <!--Num-->
+		<div>
+			<label for="num">Num</label>
+			<input type="number" name="num" id="num" placeholder="Phone number" required>
+		</div>
+
+		<!--Email-->
+		<div>
+			<label for="email">Email</label>
+			<input type="email" name="email" id="email" maxlength="32" placeholder="ejemplo@ejemplo.com" required>
+		</div>
+
+        <!--Plate-->
+		<div>
+			<label for="plate">Plate</label>
+			<input type="text" name="plate" id="plate" maxlength="32" placeholder="Plate ID" required>
+		</div>
+
+        <!--Time-->
+		<div>
+			<label for="Time">Time</label>
+			<input type="time" name="time" id="time" maxlength="32" placeholder="Entrancy time" required>
+		</div>
+
+
+		<input type="submit" value="Registrar">
+	</form>
+
+<div id="mensaje">
+    
+</div>
+</body>
+
+</html>
+
+<script>
+    document.getElementById("form").onsubmit=function(e){
+        e.preventDefault()
+        const name=document.getElementById("name")
+        const lastname=document.getElementById("lastname")
+        const sex=document.getElementById("sex")
+        const email=document.getElementById("email")
+        const docnum=document.getElementById("docnum")
+        const numero=document.getElementById("numero")
+        
+        const data={
+            name:name.value,
+            lastname:lastname.value,
+            sex:sex.value,
+            email:email.value,
+            docnum:docnum.value,
+            numero:numero.value,
+        }
+        fetch("/valor",{
+            method:"POST",
+            body:JSON.stringify(data),
+            headers:{"Content-Type": "application/json"}
+        }).then(function(response){
+            console.log(response)
+            response.json().then(function(data){
+                console.log(data)
+                if(data.resultado=="a"){
+                    document.getElementById("mensaje").innerHTML="Trabajaremos para mejorar nuestro servicio. Gracias."
+                    document.getElementById("mensaje").style.color="red"
+                }
+                else if(data.resultado=="b"){
+                    document.getElementById("mensaje").innerHTML="Agradecemos su preferencia. Gracias."
+                    document.getElementById("mensaje").style.color="green"
+                }
+                else if(data.resultado=="c"){
+                    document.getElementById("mensaje").innerHTML="Muchas Gracias, te enviaremos un regalo"
+                    document.getElementById("mensaje").style.color="blue"
+                }
+            })
+        })
+        
+    }
+</script>
