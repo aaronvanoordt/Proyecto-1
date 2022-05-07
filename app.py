@@ -4,11 +4,13 @@ from flask import Flask, redirect, render_template, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask.helpers import url_for
+from datetime import datetime
+
 
 #Configuration
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres:vanarcar08@localhost:5432/carspot"
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres:vanarcar08@localhost:5432/mislucas"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
@@ -17,18 +19,30 @@ migrate = Migrate(app, db)
 #Models
  
 class User(db.Model):
-    __tablename__ = "Carros"
-    
+    __tablename__ = "Usuarios"
     id = db.Column(db.Integer, primary_key=True)
-    owner = db.Column(db.String(32), nullable=False)
-    num = db.Column(db.Integer(), nullable=False)
+    name = db.Column(db.String(32), nullable=False)
     email = db.Column(db.String(32), nullable=False)
-    plate = db.Column(db.String(6), nullable=False)
-    time = db.Column(db.Time(1))
+    password = db.Column(db.String(32), nullable=False)
+    total = db.Column(db.Integer(), nullable=False)
 
-def pay(self):
-    total = (time.now-self.time)*0.10
+    def calculate_total(money):
+        total = total + money
+        return total
 
+class Ingreso(db.Model):
+    __tablename__ = "Ingresos"
+    id = db.Column(db.Integer, primary_key=True)
+    monto= db.Column(db.Integer(), nullable=False)
+    detalle= db.Column(db.Integer(), nullable=False)
+    tipo= db.Column(db.String(), nullable=False)
+
+class Egreso(db.Model):
+    __tablename__ = "Egresos"
+    id = db.Column(db.Integer, primary_key=True)
+    monto= db.Column(db.Integer(), nullable=False)
+    detalle= db.Column(db.String(), nullable=False)
+    tipo= db.Column(db.String(), nullable=False)
 
 db.create_all()
 
@@ -36,30 +50,32 @@ db.create_all()
 
 @app.route("/")
 def login():
-    return render_template("index.html")
+    return render_template("dashboard.html")
 
-@app.route("/revision", methods=["POST"])
+@app.route("/registrar")
+def registrar():
+    return render_template("registrar.html")
+
+@app.route("/registrar", methods=["POST"])
 def calculate_payment():
     data=request.json
-    owner = data["owner"]
-    num = data["num"]
+    name = data["name"]
     email = data["email"]
-    plate = data["plate"]
-    time = data["time"]
+    password = password["password"]
+    total = data["total"]
     
 
     user = User(
-		owner=owner,
-		num=num, 
+		name=name,
 		email=email,
-		plate=int(plate),
-		time=int(time),
+        password = password,
+		total=int(total),
 	)
 
     db.session.add(user)
     db.session.commit()
-    payment = user.pay()
-    return jsonify({"total_a_pagar": payment}), 200
+    money = user.calculate_total()
+    return jsonify({"Monto total": money}), 200
 
 
 if __name__ == "__main__":

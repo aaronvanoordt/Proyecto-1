@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+
+<head>
+	<title>MisLucas - Dashboard</title>
+
+	<link rel="stylesheet" href="static\dashboard.css">
+	<script src="JavaScript/ingreso_egreso.js"></script>
+
+	<script>
+		function mostrar_egreso(){
+		var formulario = document.getElementById("Egreso");
+		formulario.style = "display: block;"
+		}
+	</script>
+
+	<script>
+		function mostrar_ingreso(){
+		var formulario = document.getElementById("Ingreso");
+		formulario.style = "display: block;"
+		}
+	</script>
+	
+	<script>
+		function registrar_ingreso(){
+			var ingreso = document.getElementById("Ingreso");
+			user.total = user.total + ingreso.total
+		}
+	</script>
+
+</head>
+
+<body>
+
+	<h1>Hola Aaron, revisa tus finanzas personales a continuación</h1>
+
+	<div class="total">
+		Tu total es: user.total
+	</div>
+
+	<div>
+		Registre un egreso: 
+	</div>
+
+	<form id="Egreso" >
+		<!--Monto-->
+		<div>
+			<label for="monto">Monto</label>
+			<input type="number" name="monto" id="monto" placeholder="¿Cuánto gastaste?" required>
+		</div>
+
+		<!--Detalle-->
+		<div>
+			<label for="detalle">Detalle</label>
+			<input type="text" name="text" id="text" placeholder="Describe tu gasto" required>
+		</div>
+
+		<!--Tipo-->
+		<div>
+			<label for="tipo">Tipo</label>
+			<input type="text" name="text" id="text" maxlength="13" placeholder="¿Digital o transferencia?" required>
+		<div>
+		
+		<input type="submit" value="Enviar">
+	</form>
+
+	<div class="ingreso">
+		Registre un ingreso: 
+		<form id="Ingreso">
+			<!--Monto-->
+			<div>
+				<label for="monto">Monto</label>
+				<input type="number" name="monto" id="monto" placeholder="¿Cuánto ganaste?" required>
+			</div>
+	
+			<!--Detalle-->
+			<div>
+				<label for="detalle">Detalle</label>
+				<input type="text" name="text" id="text" placeholder="Describe tu ingreso" required>
+			</div>
+	
+			<!--Tipo-->
+			<div>
+				<label for="tipo">Tipo</label>
+				<input type="text" name="text" id="text" maxlength="13" placeholder="¿Digital o transferencia?" required>
+			<div>
+			
+			<input type="submit" value="Enviar">
+		</form>
+	</div>
+
+	
+
+</body>
+
+</html>
+
+<script>
+    document.getElementById("form").onsubmit=function(e){
+        e.preventDefault()
+        const name=document.getElementById("name")
+		const total=document.getElementById("total")
+       
+        
+        const data={
+            name:name.value,
+            total:total.value,
+        }
+        fetch("/registrar",{
+            method:"POST",
+            body:JSON.stringify(data),
+            headers:{"Content-Type": "application/json"}
+        }).then(function(response){
+            console.log(response)
+            response.json().then(function(data){
+                console.log(data)
+                print("Hola")
+            })
+        })
+        
+    }
+	
